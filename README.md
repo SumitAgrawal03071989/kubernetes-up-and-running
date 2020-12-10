@@ -1,5 +1,25 @@
-<!-- markdownlint-disable -->
+kubectl<!-- markdownlint-disable -->
 # kubernetes-up-and-running
+
+## Google Cloud platform kubernetes
+### Install google cloud SDK on local machine
+```
+
+echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+
+sudo apt-get update && sudo apt-get install google-cloud-sdk
+
+// select appropriate project while initiating.
+gcloud init
+
+// Here I created kubernetes cluster from UI.
+// and then setup kubectl command on local.
+
+gcloud container clusters get-credentials my-first-cluster-1 
+
+```
 
 ## Prerequisite:
 * Check that docker is installed and running.
@@ -12,14 +32,14 @@ docker version
 
     * created alias in .bashrc file.
 
-    * ```alias kctl='microk8s kubectl'```
+    * ```alias kubectl='microk8s kubectl'```
     * this version command should return client and server version without any error
-    * ```kctl version```
+    * ```kubectl version```
 
 
 ```
 token=$(microk8s kubectl -n kube-system get secret | grep default-token | cut -d " " -f1)
-kctl -n kube-system describe secret $token
+kubectl -n kube-system describe secret $token
 ```
 
 ## The Kubernetes Client
@@ -44,76 +64,7 @@ different nodes in the cluster.
 
 ```
 kubectl get nodes
-
-// to get specific information about any node. 
-kctl describe nodes sumit-lenovo-ideapad-s540-15iml-d
-
-Name:               sumit-lenovo-ideapad-s540-15iml-d
-Roles:              <none>
-Labels:             beta.kubernetes.io/arch=amd64
-                    beta.kubernetes.io/os=linux
-                    kubernetes.io/arch=amd64
-                    kubernetes.io/hostname=sumit-lenovo-ideapad-s540-15iml-d
-                    kubernetes.io/os=linux
-                    microk8s.io/cluster=true
-Annotations:        node.alpha.kubernetes.io/ttl: 0
-                    projectcalico.org/IPv4Address: 172.18.0.1/16
-                    projectcalico.org/IPv4VXLANTunnelAddr: 10.1.68.192
-                    volumes.kubernetes.io/controller-managed-attach-detach: true
-CreationTimestamp:  Thu, 17 Sep 2020 07:52:15 +0530
-Taints:             <none>
-Unschedulable:      false
-Lease:
-  HolderIdentity:  sumit-lenovo-ideapad-s540-15iml-d
-  AcquireTime:     <unset>
-  RenewTime:       Sun, 20 Sep 2020 14:29:51 +0530
-Conditions:
-  Type                 Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
-  ----                 ------  -----------------                 ------------------                ------                       -------
-  NetworkUnavailable   False   Sun, 20 Sep 2020 12:19:20 +0530   Sun, 20 Sep 2020 12:19:20 +0530   CalicoIsUp                   Calico is running on this node
-  MemoryPressure       False   Sun, 20 Sep 2020 14:29:42 +0530   Thu, 17 Sep 2020 07:52:15 +0530   KubeletHasSufficientMemory   kubelet has sufficient memory available
-  DiskPressure         False   Sun, 20 Sep 2020 14:29:42 +0530   Thu, 17 Sep 2020 07:52:15 +0530   KubeletHasNoDiskPressure     kubelet has no disk pressure
-  PIDPressure          False   Sun, 20 Sep 2020 14:29:42 +0530   Thu, 17 Sep 2020 07:52:15 +0530   KubeletHasSufficientPID      kubelet has sufficient PID available
-  Ready                True    Sun, 20 Sep 2020 14:29:42 +0530   Sun, 20 Sep 2020 12:19:21 +0530   KubeletReady                 kubelet is posting ready status. AppArmor enabled
-Addresses:
-  InternalIP:  192.168.0.105
-  Hostname:    sumit-lenovo-ideapad-s540-15iml-d
-Capacity:
-  cpu:                8
-  ephemeral-storage:  181487144Ki
-  hugepages-1Gi:      0
-  hugepages-2Mi:      0
-  memory:             7881632Ki
-  pods:               110
-Allocatable:
-  cpu:                8
-  ephemeral-storage:  180438568Ki
-  hugepages-1Gi:      0
-  hugepages-2Mi:      0
-  memory:             7779232Ki
-  pods:               110
-System Info:
-  Machine ID:                 00ac7ef85db743de9c75ee4d8456ef43
-  System UUID:                20200717-f8ac-652c-eef8-f8ac652ceefc
-  Boot ID:                    3a73035d-8fa6-4841-bbba-6905cbff14b1
-  Kernel Version:             5.4.0-47-generic
-  OS Image:                   Ubuntu 20.04.1 LTS
-  Operating System:           linux
-  Architecture:               amd64
-  Container Runtime Version:  containerd://1.3.7
-  Kubelet Version:            v1.19.0-34+09a4aa08bb9e93
-  Kube-Proxy Version:         v1.19.0-34+09a4aa08bb9e93
-Non-terminated Pods:          (6 in total)
-  Namespace                   Name                                          CPU Requests  CPU Limits  Memory Requests  Memory Limits  AGE
-  ---------                   ----                                          ------------  ----------  ---------------  -------------  ---
-  kube-system                 dashboard-metrics-scraper-6c4568dc68-h5qv5    0 (0%)        0 (0%)      0 (0%)           0 (0%)         3d6h
-  kube-system                 kubernetes-dashboard-7ffd448895-9bg8z         0 (0%)        0 (0%)      0 (0%)           0 (0%)         3d6h
-  kube-system                 metrics-server-8bbfb4bdb-kl64v                0 (0%)        0 (0%)      0 (0%)           0 (0%)         3d6h
-  kube-system                 calico-kube-controllers-847c8c99d-gw8l5       0 (0%)        0 (0%)      0 (0%)           0 (0%)         3d6h
-  kube-system                 calico-node-mf88l                             250m (3%)     0 (0%)      0 (0%)           0 (0%)         3d6h
-
 ```
-
 
 ## CHAPTER 4, Common kubectl Commands
 
@@ -122,7 +73,7 @@ Non-terminated Pods:          (6 in total)
 namespace as a folder that holds a set of objects.
 
 ```
-kctl get all --all-namespaces
+kubectl get all --all-namespaces
 ```
 
 ### Contexts
@@ -139,3 +90,242 @@ spaces/default/pods/my-pod leads to the representation of a Pod in the default n
 space named my-pod.
 
 ### Creating, Updating, and Destroying Kubernetes Objects
+
+Objects in the Kubernetes API are represented as JSON or YAML files. These files are
+either returned by the server in response to a query or posted to the server as part of
+an API request. You can use these YAML or JSON files to create, update, or delete
+objects on the Kubernetes server.
+
+```
+kubectl apply -f obj.yaml
+```
+* we can save changes in obj.yaml and run apply again for cluster to respond to those chages.
+
+### Labeling and Annotating Objects
+* Labels and annotations are tags for your objects. 
+
+### Debugging Commands
+
+```
+kubectl logs <pod-name>
+```
+* You can also copy files to and from a container using the cp command
+```
+kubectl cp <pod-name>:</path/to/remote/file> </path/to/local/file>
+```
+
+## CHAPTER 5, Pods
+
+In earlier chapters we discussed how you might go about containerizing your applica‐
+tion, but in real-world deployments of containerized applications you will often want
+to colocate multiple applications into a single atomic unit, scheduled onto a single
+machine
+
+### Pods in Kubernetes
+* A Pod represents a collection of application containers and volumes running in the
+same execution environment
+* Pods, not containers, are the smallest deployable arti‐
+fact in a Kubernetes cluster. 
+* cgroups: cgroups is a Linux kernel feature that limits, accounts for, and isolates the resource usage of a collection of processes. 
+* Each container within a Pod runs in its own cgroup, but they share a number of
+Linux namespaces.
+* Applications running in the same Pod share the same IP address and port space (net‐
+work namespace), have the same hostname (UTS namespace)
+
+### Thinking with Pods
+Thumb rule: 
+“Will these con‐
+tainers work correctly if they land on different machines?” If the answer is “no,” a Pod
+is the correct grouping for the containers. If the answer is “yes,” multiple Pods is
+probably the correct solution"
+
+## The Pod Manifest
+* Pods are described in a Pod manifest. The Pod manifest is just a text-file representa‐
+tion of the Kubernetes API object.
+* Kubernetes strongly believes in declarative configuration
+  * Declarative configuration: 
+    * here you declare desired state and system like kubernetes acts to achive desired state.
+    * Example, number of replicas for container or pod.
+    * if you manually remove one container then kubernetes will add it, and vice a versa.
+  
+  * Imperative configuration:
+    * series of steps to achive state of world.
+    * This is old approach and results in hard to maintain systems.
+
+### Creating a Pod
+
+```
+kubectl run kuard --generator=run-pod/v1 --image=gcr.io/kuar-demo/kuard-amd64:blue
+or
+kubectl apply -f /home/sumit/projects/kubernetes-up-and-running/chapter-05/kuard-pod.yaml
+
+kubectl get pods
+
+kubectl delete pods/myhelloworld
+kubectl delete pods/kuard
+
+kubectl run myhelloworld --generator=run-pod/v1 --image=sumitagrawal4548/helloworld
+```
+
+### Running Commands in Your Container with exec
+```
+kubectl exec -it kuard ash
+kubectl exec -it myhelloworld ash
+
+
+kubectl exec --stdin --tty myhelloworld -- /bin/bash
+
+```
+
+### Copying Files to and from Containers
+```
+// This command failed with file does not exists on container.
+kubectl cp kuard:/captures/capture3.txt ./capture3.txt
+
+
+kubectl cp /home/sumit/projects/kubernetes-up-and-running/chapter-05/TestMe.txt kuard:/TestMe.txt
+tar: can't open 'TestMe.txt': Permission denied
+command terminated with exit code 
+```
+
+## Health Checks
+* Kubernetes restarts process if its not running.
+* But what if process is stuck in deadlock and its not responding.
+* To address this, Kubernetes introduced health checks for application liveness.
+Liveness health checks run application-specific logic (e.g., loading a web page) to ver‐
+ify that the application is not just still running, but is functioning properly. Since
+these liveness health checks are application-specific, you have to define them in your
+Pod manifest.
+
+### Liveness Probe
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kuard
+spec:
+  containers:
+    - image: gcr.io/kuar-demo/kuard-amd64:1
+      name: kuard
+      livenessProbe:
+        httpGet:
+          path: /healthy
+          port: 8080
+        initialDelaySeconds: 5
+        timeoutSeconds: 1
+        periodSeconds: 10
+        failureThreshold: 3
+      ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+
+
+kubectl apply -f /home/sumit/projects/kubernetes-up-and-running/chapter-05/kuard-pod-health.yaml
+
+kubectl port-forward kuard 8080:8080
+
+* open "http://localhost8080"
+* Click on liveliness probe tab
+* click on fail link.
+* The application will fail.
+* Kubernetes will restart the pod.
+
+// details can be found with below command.
+
+kubectl describe pods kuard
+
+```
+
+### Readiness Probe
+* Liveness determines if an applica‐
+tion is running properly. Containers that fail liveness checks are restarted. Readiness
+describes when a container is ready to serve user requests.
+* Combining the readiness and liveness probes helps ensure only healthy containers
+are running within the cluster.
+
+### Types of Health Checks
+* Kubernetes also supports tcpSocket health checks
+* This style of
+probe is useful for non-HTTP applications; for example, databases or other non–
+HTTP-based APIs.
+
+### Resource Management
+* If you purchase a one-core machine,
+and your application uses one-tenth of a core, then your utilization is 10%. 
+* With scheduling systems like Kubernetes managing resource packing, you can drive
+your utilization to greater than 50%.
+* Kubernetes allows users to specify two different resource metrics.
+  * Resource requests
+specify the minimum amount of a resource required to run the application.
+  * Resource
+limits specify the maximum amount of a resource that an application can consume.
+
+### Resource Requests: Minimum Required Resources
+
+To request that the kuard container lands on a machine with half a CPU
+free and gets 128 MB of memory allocated to it, we define the Pod as shown in
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kuard
+spec:
+  containers:
+    - image: gcr.io/kuar-demo/kuard-amd64:1
+      name: kuard
+      resources:
+        requests:
+          cpu: "500m"
+          memory: "128Mi"
+      ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+```
+
+### Request limit details
+* We can specify minimum resource required by pod.
+* Kubernetes makes sure that node has minimum resource capacity while scheduling pod to node.
+* 
+
+### Capping Resource Usage with Limits
+In addition to setting the resources required by a Pod, which establishes the mini‐
+mum resources available to the Pod, you can also set a maximum on a Pod’s resource
+usage via resource limits.
+
+## Persisting Data with Volumes
+* Various ways you can persist the data.
+
+# 
+# CHAPTER 6. Labels and Annotations
+Kubernetes was made to grow with you as your application scales in both size and
+complexity. With this in mind, labels and annotations were added as foundational
+concepts. Labels and annotations let you work in sets of things that map to how you
+think about your application. You can organize, mark, and cross-index all of your
+resources to represent the groups that make the most sense for your application.
+
+
+# CHAPTER 7. Service Discovery
+
+```
+kubectl run alpaca-prod \
+--image=gcr.io/kuar-demo/kuard-amd64:blue \
+--replicas=3 \
+--port=8080 \
+--labels="ver=1,app=alpaca,env=prod"
+
+kubectl expose deployment alpaca-prod
+
+kubectl run bandicoot-prod \
+--image=gcr.io/kuar-demo/kuard-amd64:green \
+--replicas=2 \
+--port=8080 \
+--labels="ver=2,app=bandicoot,env=prod"
+
+kubectl expose deployment bandicoot-prod
+
+kubectl get services -o wide
+```
